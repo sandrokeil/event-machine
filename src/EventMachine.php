@@ -25,6 +25,7 @@ use Prooph\EventMachine\Container\ContainerChain;
 use Prooph\EventMachine\Container\ContextProviderFactory;
 use Prooph\EventMachine\Container\TestEnvContainer;
 use Prooph\EventMachine\Data\ImmutableRecord;
+use Prooph\EventMachine\Eventing\EventTranslatorPlugin;
 use Prooph\EventMachine\Http\MessageBox;
 use Prooph\EventMachine\JsonSchema\JsonSchema;
 use Prooph\EventMachine\JsonSchema\JsonSchemaAssertion;
@@ -596,6 +597,7 @@ final class EventMachine
             $this->projectionRunner = new ProjectionRunner(
                 $this->container->get(self::SERVICE_ID_PROJECTION_MANAGER),
                 $this->compiledProjectionDescriptions,
+                $this->eventClassMap,
                 $this
             );
         }
@@ -917,6 +919,12 @@ final class EventMachine
         $serviceLocatorPlugin = new ServiceLocatorPlugin($this->container);
 
         $serviceLocatorPlugin->attachToMessageBus($eventBus);
+
+        if(count($this->eventClassMap)) {
+            $eventTranslator = new EventTranslatorPlugin($this->eventClassMap);
+
+            $eventTranslator->attachToMessageBus($eventBus);
+        }
     }
 
     private function attachEventPublisherToEventStore(): void
