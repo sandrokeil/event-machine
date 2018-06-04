@@ -25,7 +25,7 @@ use Prooph\EventMachine\Container\ContainerChain;
 use Prooph\EventMachine\Container\ContextProviderFactory;
 use Prooph\EventMachine\Container\TestEnvContainer;
 use Prooph\EventMachine\Data\ImmutableRecord;
-use Prooph\EventMachine\Eventing\EventTranslatorPlugin;
+use Prooph\EventMachine\Messaging\MessageTranslatorPlugin;
 use Prooph\EventMachine\Http\MessageBox;
 use Prooph\EventMachine\JsonSchema\JsonSchema;
 use Prooph\EventMachine\JsonSchema\JsonSchemaAssertion;
@@ -897,6 +897,11 @@ final class EventMachine
         $serviceLocatorPlugin = new ServiceLocatorPlugin($this->container);
 
         $serviceLocatorPlugin->attachToMessageBus($queryBus);
+
+        if(count($this->queryClasaMap)) {
+            $queryTranslator = new MessageTranslatorPlugin($this->queryClasaMap);
+            $queryTranslator->attachToMessageBus($queryBus);
+        }
     }
 
     private function setUpEventBus(): void
@@ -921,7 +926,7 @@ final class EventMachine
         $serviceLocatorPlugin->attachToMessageBus($eventBus);
 
         if(count($this->eventClassMap)) {
-            $eventTranslator = new EventTranslatorPlugin($this->eventClassMap);
+            $eventTranslator = new MessageTranslatorPlugin($this->eventClassMap);
 
             $eventTranslator->attachToMessageBus($eventBus);
         }
