@@ -25,7 +25,6 @@ use Prooph\EventMachine\Container\ContainerChain;
 use Prooph\EventMachine\Container\ContextProviderFactory;
 use Prooph\EventMachine\Container\TestEnvContainer;
 use Prooph\EventMachine\Data\ImmutableRecord;
-use Prooph\EventMachine\Messaging\MessageTranslatorPlugin;
 use Prooph\EventMachine\Http\MessageBox;
 use Prooph\EventMachine\JsonSchema\JsonSchema;
 use Prooph\EventMachine\JsonSchema\JsonSchemaAssertion;
@@ -33,6 +32,7 @@ use Prooph\EventMachine\JsonSchema\JustinRainbowJsonSchemaAssertion;
 use Prooph\EventMachine\JsonSchema\Type\EnumType;
 use Prooph\EventMachine\JsonSchema\Type\ObjectType;
 use Prooph\EventMachine\Messaging\GenericJsonSchemaMessageFactory;
+use Prooph\EventMachine\Messaging\MessageTranslatorPlugin;
 use Prooph\EventMachine\Persistence\Stream;
 use Prooph\EventMachine\Projecting\ProjectionDescription;
 use Prooph\EventMachine\Projecting\ProjectionRunner;
@@ -277,7 +277,7 @@ final class EventMachine
 
         $this->commandMap[$commandName] = $schema->toArray();
 
-        if($commandClass) {
+        if ($commandClass) {
             $this->commandClassMap[$commandName] = $commandClass;
         }
 
@@ -294,7 +294,7 @@ final class EventMachine
 
         $this->eventMap[$eventName] = $schema->toArray();
 
-        if($eventClass) {
+        if ($eventClass) {
             $this->eventClassMap[$eventName] = $eventClass;
         }
 
@@ -318,7 +318,7 @@ final class EventMachine
         $queryDesc = new QueryDescription($queryName, $this);
         $this->queryDescriptions[$queryName] = $queryDesc;
 
-        if($queryClass) {
+        if ($queryClass) {
             $this->queryClasaMap[$queryName] = $queryClass;
         }
 
@@ -898,7 +898,7 @@ final class EventMachine
 
         $serviceLocatorPlugin->attachToMessageBus($queryBus);
 
-        if(count($this->queryClasaMap)) {
+        if (count($this->queryClasaMap)) {
             $queryTranslator = new MessageTranslatorPlugin($this->queryClasaMap);
             $queryTranslator->attachToMessageBus($queryBus);
         }
@@ -925,7 +925,7 @@ final class EventMachine
 
         $serviceLocatorPlugin->attachToMessageBus($eventBus);
 
-        if(count($this->eventClassMap)) {
+        if (count($this->eventClassMap)) {
             $eventTranslator = new MessageTranslatorPlugin($this->eventClassMap);
 
             $eventTranslator->attachToMessageBus($eventBus);
